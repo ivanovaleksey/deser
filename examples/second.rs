@@ -35,4 +35,11 @@ fn main() {
 
     let msg: Message = serde_json::from_str(some_data).unwrap();
     println!("{:?}", msg);
+
+    match msg {
+        Message::CreateAgent(data) => {
+            println!("{:?}", data);
+        },
+        _ => unreachable!(),
+    }
 }
