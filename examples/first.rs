@@ -15,6 +15,11 @@ enum Message {
     // Event {  },
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+struct CreateAgentData {
+    label: Option<String>,
+}
+
 fn main() {
     let none_data = r#"{
         "type": "request",
@@ -36,4 +41,14 @@ fn main() {
 
     let msg: Message = serde_json::from_str(some_data).unwrap();
     println!("{:?}", msg);
+
+    match msg {
+        Message::Request { data, .. } => {
+            if let Some(value) = data {
+                let data: CreateAgentData = serde_json::from_value(value).unwrap();
+                println!("{:?}", data);
+            }
+        },
+        _ => unreachable!(),
+    }
 }
