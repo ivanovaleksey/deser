@@ -6,16 +6,32 @@ extern crate serde_json;
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case", tag = "action")]
 enum Message {
-    CreateAgent(CreateAgentData),
-    // CreateTrack(CreateTrackData),
+    CreateAgent(CreateAgentReq),
+    CreateTrack(CreateTrackReq),
     // ListAgent(ListAgentData),
     // ListTrack(ListTrackData),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct CreateAgentData {
-    label: Option<String>,
+struct CreateAgentReq {
+    data: Option<CreateAgentData>,
     cid: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct CreateAgentData {
+    label: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct CreateTrackReq {
+    data: CreateTrackData,
+    cid: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct CreateTrackData {
+    id: String
 }
 
 fn main() {
@@ -29,7 +45,9 @@ fn main() {
 
     let some_data = r#"{
         "action": "create_agent",
-        "label": "Foo bar",
+        "data": {
+            "label": "Foo bar"
+        },
         "cid": "qwerty"
     }"#;
 
@@ -37,8 +55,8 @@ fn main() {
     println!("{:?}", msg);
 
     match msg {
-        Message::CreateAgent(data) => {
-            println!("{:?}", data);
+        Message::CreateAgent(req) => {
+            println!("{:?}", req.data);
         },
         _ => unreachable!(),
     }
